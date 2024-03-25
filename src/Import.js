@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
 import CSVReader from 'react-csv-reader';
-import { collection, doc, setDoc, writeBatch } from "firebase/firestore";
+import { collection, doc, setDoc } from "firebase/firestore";
 import { db } from './firebase'; // Ensure this points to your Firebase configuration
 
 // Placeholder for your Firebase configuration
-const firebaseConfig = {
-  // YOUR_FIREBASE_CONFIG
-};
 
 export default function Import() {
     const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [setName, setSetName] = useState('');
     const [fromDate, setFromDate] = useState('');
@@ -38,18 +34,12 @@ export default function Import() {
         setIsModalOpen(true);
     }
 
-    function handleFileChange(e) {
-        // Handle file change if needed
-    }
 
     function handleApproval(e) {
         e.preventDefault();
         import_into_firebase();
     }
 
-    function closeModal() {
-        setIsModalOpen(false);
-    }
 
     function transformData(data) {
         // Transform data to fit the Firebase structure
@@ -67,7 +57,7 @@ export default function Import() {
     
     async function import_into_firebase() {
         setIsLoading(true); // Start loading
-        setSuccessMessage(''); 
+        setSuccessMessage('Data Uploaded '); 
     
         try {
             const weeklyDocRef = doc(collection(db, 'PGupload'), 'Weekley');
