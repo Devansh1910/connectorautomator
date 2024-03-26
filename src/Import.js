@@ -40,7 +40,6 @@ export default function Import() {
         import_into_firebase();
     }
 
-
     function transformData(data) {
         // Transform data to fit the Firebase structure
         return data.map(item => ({
@@ -48,13 +47,13 @@ export default function Import() {
             B: item.b,
             C: item.c,
             D: item.d,
+            Image: item.Image, // Ensure this matches the case and spelling of the column name in your CSV file
             Correct: item.correct_option,
             Description: item.description,
             Question: item.question,
-            id: item.id,
-            Image: item.img
+            id: item.id
         }));
-    }
+    }    
     
     async function import_into_firebase() {
         setIsLoading(true); // Start loading
@@ -79,7 +78,6 @@ export default function Import() {
     
             // Directly set the document with your structured data
             await setDoc(quizDocRef, quizDocument); // Correct use of set with a document reference
-    
             setIsModalOpen(false);
             console.log('All data imported successfully');
             alert('Data Uploaded Successfully'); // Set success message
@@ -280,7 +278,7 @@ export default function Import() {
                                     <td className="table-cell">{item.reasonb}</td>
                                     <td className="table-cell">{item.reasonc}</td>
                                     <td className="table-cell">{item.reasond}</td>
-                                    <td className="table-cell">{item.img}</td>
+                                    <td className="table-cell">{item.image}</td>
                                 </tr>
                             ))}
                         </tbody>
