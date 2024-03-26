@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/connectorautomator/static/css/main.60691f7e.css",
-    "main.js": "/connectorautomator/static/js/main.61ce4ff7.js",
+    "main.js": "/connectorautomator/static/js/main.d65bfac2.js",
     "static/js/453.5b42630a.chunk.js": "/connectorautomator/static/js/453.5b42630a.chunk.js",
     "index.html": "/connectorautomator/index.html",
     "main.60691f7e.css.map": "/connectorautomator/static/css/main.60691f7e.css.map",
-    "main.61ce4ff7.js.map": "/connectorautomator/static/js/main.61ce4ff7.js.map",
+    "main.d65bfac2.js.map": "/connectorautomator/static/js/main.d65bfac2.js.map",
     "453.5b42630a.chunk.js.map": "/connectorautomator/static/js/453.5b42630a.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.60691f7e.css",
-    "static/js/main.61ce4ff7.js"
+    "static/js/main.d65bfac2.js"
   ]
 }
