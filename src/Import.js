@@ -51,7 +51,8 @@ export default function Import() {
             Correct: item.correct_option,
             Description: item.description,
             Question: item.question,
-            id: item.id
+            id: item.id,
+            Image: item.img
         }));
     }
     
