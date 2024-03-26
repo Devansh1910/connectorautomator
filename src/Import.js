@@ -260,6 +260,7 @@ export default function Import() {
                                 <th className="table-cell">Reason B</th>
                                 <th className="table-cell">Reason C</th>
                                 <th className="table-cell">Reason D</th>
+                                <th className="table-cell">Image</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -278,6 +279,7 @@ export default function Import() {
                                     <td className="table-cell">{item.reasonb}</td>
                                     <td className="table-cell">{item.reasonc}</td>
                                     <td className="table-cell">{item.reasond}</td>
+                                    <td className="table-cell">{item.img}</td>
                                 </tr>
                             ))}
                         </tbody>
