@@ -199,33 +199,28 @@ export default function Import() {
                             onChange={e => setSpeciality(e.target.value)}
                             style={{ padding: '10px', borderRadius: '5px' }}>
                                 <option value="">Select Speciality</option>
-                                <option value="Internal Medicine">Internal Medicine</option>
+                                <option value="Medicine">Medicine</option>
                                 <option value="Pediatrics">Pediatrics</option>
                                 <option value="Surgery">Surgery</option>
                                 <option value="Neurology">Pediatrics</option>
                                 <option value="Obstetrics and Gynecology">Obstetrics and Gynecology</option>
-                                <option value="Anesthesiology">Anesthesiology</option>
-                                <option value="Psychiatry">Psychiatry</option>
-                                <option value="Radiology">Radiology</option>
-                                <option value="Emergency Medicine">Emergency Medicine</option>
+                                <option value="Anesthesiology">Anaesthesia</option>
+                                <option value="Radiology">Radiodiagnosis</option>
                                 <option value="Dermatology">Dermatology</option>
-                                <option value="Family Medicine">Family Medicine</option>
                                 <option value="Ophthalmology">Ophthalmology</option>
                                 <option value="Pathology">Pathology</option>
-                                <option value="Physical Medicine and Rehabilitation">Physical Medicine and Rehabilitation</option>
-                                <option value="Infectious Disease">Infectious Disease</option>
-                                <option value="Allergy and Immunology">Allergy and Immunology</option>
-                                <option value="Nuclear Medicine">Nuclear Medicine</option>
-                                <option value="Pulmonology">Pulmonology</option>
-                                <option value="Otolaryngology (ENT)">Otolaryngology (ENT)</option>
-                                <option value="Preventive Medicine">Preventive Medicine</option>
+                                <option value="ENT">ENT</option>
+                                <option value="Orthopaedics">Orthopaedics</option>
+                                <option value="Social and Preventive Medicine">Social and Preventive Medicine</option>
                                 <option value="Microbiology">Microbiology</option>
                                 <option value="Pharmacology">Pharmacology</option>
-                                <option value="Forensic Medicine">Forensic Medicine</option>
+                                <option value="Forensic Medicine">Forensic medicine</option>
                                 <option value="Physiology">Physiology</option>
                                 <option value="Anatomy">Anatomy</option>
                                 <option value="Biochemistry">Biochemistry</option>
-                                <option value="Grand Test">Grand Test</option>
+                                <option value="Exam">Exam</option>
+                                <option value="Sponsor">Sponsor</option>
+                                <option value="home">home</option>
                             </select>
                         </label>
                         <button 
