@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import CSVReader from 'react-csv-reader';
 import { collection, doc, setDoc } from "firebase/firestore";
 import { db } from './firebase'; // Ensure this points to your Firebase configuration
+import { Timestamp } from "firebase/firestore";
 
 // Placeholder for your Firebase configuration
 
@@ -47,7 +48,7 @@ export default function Import() {
             B: item.b,
             C: item.c,
             D: item.d,
-            Image: item.Image, // Ensure this matches the case and spelling of the column name in your CSV file
+            Image: item.image, // Ensure this matches the case and spelling of the column name in your CSV file
             Correct: item.correct_option,
             Description: item.description,
             Question: item.question,
@@ -57,30 +58,33 @@ export default function Import() {
     
     async function import_into_firebase() {
         setIsLoading(true); // Start loading
-        setSuccessMessage('Data Uploaded '); 
-    
+        
         try {
             const weeklyDocRef = doc(collection(db, 'PGupload'), 'Weekley');
             const quizCollectionRef = collection(weeklyDocRef, 'Quiz');
-            // Generate a new document reference within the 'Quiz' collection
-            const quizDocRef = doc(quizCollectionRef); // Firestore auto-generates an ID here
+            const quizDocRef = doc(quizCollectionRef);
     
             const transformedData = transformData(data);
     
+            // Convert from and to dates to Timestamps
+            const fromDateTimestamp = Timestamp.fromDate(new Date(fromDate));
+            const toDateTimestamp = Timestamp.fromDate(new Date(toDate));
+    
             // Structuring the document
             const quizDocument = {
-                Data: transformedData, // All questions inside 'Data' array
-                from: fromDate,
-                to: toDate,
+                Data: transformedData,
+                from: fromDateTimestamp,
+                to: toDateTimestamp,
                 speciality: speciality,
                 title: setName
             };
     
-            // Directly set the document with your structured data
-            await setDoc(quizDocRef, quizDocument); // Correct use of set with a document reference
+            console.log('Attempting to upload document:', quizDocument); // Debugging output
+    
+            await setDoc(quizDocRef, quizDocument); // Attempt to set the document
             setIsModalOpen(false);
             console.log('All data imported successfully');
-            alert('Data Uploaded Successfully'); // Set success message
+            alert('Data Uploaded Successfully');
             setData([]); // Clear the data
         } catch (error) {
             console.error("Error importing data: ", error);
@@ -88,6 +92,8 @@ export default function Import() {
             setIsLoading(false); // End loading
         }
     }
+    
+    
 
     return (
         <>
