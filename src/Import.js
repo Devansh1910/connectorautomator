@@ -3,8 +3,7 @@ import CSVReader from 'react-csv-reader';
 import { collection, doc, setDoc } from "firebase/firestore";
 import { db } from './firebase'; // Ensure this points to your Firebase configuration
 import { Timestamp } from "firebase/firestore";
-
-// Placeholder for your Firebase configuration
+import { v4 as uuidv4 } from 'uuid'; // Importing UUID library
 
 export default function Import() {
     const [data, setData] = useState([]);
@@ -15,7 +14,7 @@ export default function Import() {
     const [speciality, setSpeciality] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
-
+    const [qid, setQid] = useState(''); // State to store the generated UUID
 
     const papaparseOptions = {
         header: true,
@@ -26,74 +25,74 @@ export default function Import() {
 
     function iterate_data(sdata, fileInfo, originalFile) {
         setData(sdata);
-        console.log(sdata);
+        setQid(uuidv4()); // Generate and set a new UUID when file is loaded
         setIsModalOpen(true); // Open the modal immediately after data is loaded
     }
 
-    function handleSubmit(e) {
-        e.preventDefault();
-        setIsModalOpen(true);
+    function handleSubmit(event) {
+        event.preventDefault(); // Prevent the default form submission behavior
+        import_into_firebase(); // Call your function to handle Firebase data import
     }
-
-
-    function handleApproval(e) {
-        e.preventDefault();
-        import_into_firebase();
+    
+    function handleApproval(event) {
+        event.preventDefault(); 
+    
+        console.log('Form submitted with name:', setName);
+        console.log('From date:', fromDate);
+        console.log('To date:', toDate);
+        console.log('Speciality selected:', speciality);
+    
+        setIsModalOpen(false); // This could close the modal after submitting the form
+        import_into_firebase(); // This is just an example; adapt it based on actual needs
     }
+    
 
     function transformData(data) {
-        // Transform data to fit the Firebase structure
-        return data.map(item => ({
+        return data.map((item, index) => ({
             A: item.a,
             B: item.b,
             C: item.c,
             D: item.d,
-            Image: item.image, // Ensure this matches the case and spelling of the column name in your CSV file
+            Image: item.image,
             Correct: item.correct_option,
             Description: item.description,
             Question: item.question,
-            id: item.id
+            id: item.id,
+            number: index // Assign an index number to each item
         }));
-    }    
-    
+    }
+
     async function import_into_firebase() {
-        setIsLoading(true); // Start loading
-        
+        setIsLoading(true);
+
         try {
             const weeklyDocRef = doc(collection(db, 'PGupload'), 'Weekley');
             const quizCollectionRef = collection(weeklyDocRef, 'Quiz');
-            const quizDocRef = doc(quizCollectionRef);
-    
+            const quizDocRef = doc(quizCollectionRef, qid); // Use the generated UUID as the document ID
+
             const transformedData = transformData(data);
-    
-            // Convert from and to dates to Timestamps
             const fromDateTimestamp = Timestamp.fromDate(new Date(fromDate));
             const toDateTimestamp = Timestamp.fromDate(new Date(toDate));
-    
-            // Structuring the document
+
             const quizDocument = {
                 Data: transformedData,
                 from: fromDateTimestamp,
                 to: toDateTimestamp,
                 speciality: speciality,
-                title: setName
+                title: setName,
+                qid: qid // Include the UUID in the document
             };
-    
-            console.log('Attempting to upload document:', quizDocument); // Debugging output
-    
-            await setDoc(quizDocRef, quizDocument); // Attempt to set the document
+
+            await setDoc(quizDocRef, quizDocument);
             setIsModalOpen(false);
-            console.log('All data imported successfully');
             alert('Data Uploaded Successfully');
-            setData([]); // Clear the data
+            setData([]);
         } catch (error) {
             console.error("Error importing data: ", error);
         } finally {
-            setIsLoading(false); // End loading
+            setIsLoading(false);
         }
     }
-    
-    
 
     return (
         <>
