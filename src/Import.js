@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import CSVReader from 'react-csv-reader';
 import { collection, doc, setDoc } from "firebase/firestore";
-import { db } from './firebase'; // Ensure this points to your Firebase configuration
+import { db } from './firebase'; 
 import { Timestamp } from "firebase/firestore";
-import { v4 as uuidv4 } from 'uuid'; // Importing UUID library
+import { v4 as uuidv4 } from 'uuid';
+
 
 export default function Import() {
     const [data, setData] = useState([]);
@@ -14,7 +15,7 @@ export default function Import() {
     const [speciality, setSpeciality] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
-    const [qid, setQid] = useState(''); // State to store the generated UUID
+    const [qid, setQid] = useState(''); 
 
     const papaparseOptions = {
         header: true,
@@ -25,13 +26,13 @@ export default function Import() {
 
     function iterate_data(sdata, fileInfo, originalFile) {
         setData(sdata);
-        setQid(uuidv4()); // Generate and set a new UUID when file is loaded
-        setIsModalOpen(true); // Open the modal immediately after data is loaded
+        setQid(uuidv4()); 
+        setIsModalOpen(true);
     }
 
     function handleSubmit(event) {
-        event.preventDefault(); // Prevent the default form submission behavior
-        import_into_firebase(); // Call your function to handle Firebase data import
+        event.preventDefault(); 
+        import_into_firebase(); 
     }
     
     function handleApproval(event) {
@@ -42,7 +43,7 @@ export default function Import() {
         console.log('To date:', toDate);
         console.log('Speciality selected:', speciality);
     
-        setIsModalOpen(false); // This could close the modal after submitting the form
+        setIsModalOpen(false); 
         import_into_firebase(); // This is just an example; adapt it based on actual needs
     }
     
@@ -58,31 +59,36 @@ export default function Import() {
             Description: item.description,
             Question: item.question,
             id: item.id,
-            number: index // Assign an index number to each item
+            number: index 
         }));
     }
 
     async function import_into_firebase() {
         setIsLoading(true);
-
+    
         try {
             const weeklyDocRef = doc(collection(db, 'PGupload'), 'Weekley');
             const quizCollectionRef = collection(weeklyDocRef, 'Quiz');
-            const quizDocRef = doc(quizCollectionRef, qid); // Use the generated UUID as the document ID
-
+            const quizDocRef = doc(quizCollectionRef, qid);
+    
             const transformedData = transformData(data);
             const fromDateTimestamp = Timestamp.fromDate(new Date(fromDate));
             const toDateTimestamp = Timestamp.fromDate(new Date(toDate));
-
+    
             const quizDocument = {
                 Data: transformedData,
                 from: fromDateTimestamp,
                 to: toDateTimestamp,
                 speciality: speciality,
                 title: setName,
-                qid: qid // Include the UUID in the document
+                qid: qid,
+                author: {
+                    speciality: speciality,
+                    uid: "UEL4k2W9IEWsqYPKqkrn",
+                    username: "mymedicos admin"
+                }
             };
-
+    
             await setDoc(quizDocRef, quizDocument);
             setIsModalOpen(false);
             alert('Data Uploaded Successfully');
@@ -93,6 +99,7 @@ export default function Import() {
             setIsLoading(false);
         }
     }
+    
 
     return (
         <>
@@ -163,7 +170,7 @@ export default function Import() {
                     padding: '10px', 
                     borderRadius: '10px',
                     display: 'flex',
-                    flexDirection: 'column' // This ensures the contents are vertically arranged
+                    flexDirection: 'column'
                 }}>
                 <form 
                    onSubmit={handleApproval} 
