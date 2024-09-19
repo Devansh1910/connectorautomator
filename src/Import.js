@@ -18,47 +18,35 @@ export default function Import() {
 
     function iterate_data(sdata) {
         setData(sdata);
-        setIsModalOpen(true);
+        setIsModalOpen(true); // Open the modal when the data is ready
     }
 
-    function handleSubmit(event) {
-        event.preventDefault(); 
-        import_into_firebase(); 
-    }
-
-    // Function to convert date string to Firebase Timestamp
+    // Convert date string to Firebase Timestamp
     function convertToTimestamp(dateString) {
         return Timestamp.fromDate(new Date(dateString));
     }
 
-    // Transforming CSV data into the format required for Firestore
+    // Transform the CSV data into the format for Firestore
     function transformData(data) {
         return data.map((item) => ({
             title: item.title,
             description: item.description,
-            timestamp: convertToTimestamp(item.timestamp), // Convert to Firebase Timestamp
+            timestamp: convertToTimestamp(item.timestamp),
         }));
     }
 
-    // Importing the transformed data into Firebase
+    // Upload the data to Firestore
     async function import_into_firebase() {
         setIsLoading(true);
-    
         try {
             const transformedData = transformData(data);
-            
-            // Loop through transformed data and upload each as a new document
+            // Loop through transformed data and upload each notification as a document
             for (const notification of transformedData) {
-                await addDoc(collection(db, 'Notifications'), {
-                    title: notification.title,
-                    description: notification.description,
-                    timestamp: notification.timestamp
-                });
+                await addDoc(collection(db, 'Notifications'), notification);
             }
-    
-            setIsModalOpen(false);
             alert('Data Uploaded Successfully');
-            setData([]); // Clear data after upload
+            setIsModalOpen(false); // Close the modal after successful upload
+            setData([]); // Clear the data after upload
         } catch (error) {
             console.error("Error importing data: ", error);
         } finally {
@@ -102,6 +90,23 @@ export default function Import() {
                         padding: 20px;
                         border-radius: 10px;
                         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                        z-index: 1050;
+                    }
+                    .modal-overlay {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background-color: rgba(0, 0, 0, 0.5);
+                        z-index: 1040;
+                    }
+                    .confirm-button {
+                        padding: 10px 40px;
+                        background-color: #2BD0BF;
+                        border-radius: 5px;
+                        color: white;
+                        cursor: pointer;
                     }
                 `}
             </style>
@@ -113,7 +118,7 @@ export default function Import() {
 
             <div className="content">
                 <div className="bg-blue-300 ml-12 mt-12 p-12">
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={(e) => e.preventDefault()}>
                         <CSVReader
                             onFileLoaded={iterate_data}
                             parserOptions={papaparseOptions}
@@ -122,16 +127,20 @@ export default function Import() {
                 </div>
 
                 {isModalOpen && (
-                    <div className="modal">
-                        <h2>Confirm Upload</h2>
-                        <p>Are you sure you want to upload the data to Firestore?</p>
-                        <button 
-                            onClick={import_into_firebase} 
-                            disabled={isLoading}
-                            style={{ padding: '10px 40px', backgroundColor: '#2BD0BF', borderRadius: '5px', color: '#ffffff' }}>
-                            {isLoading ? 'Uploading...' : 'Confirm'}
-                        </button>
-                    </div>
+                    <>
+                        <div className="modal-overlay" onClick={() => setIsModalOpen(false)} />
+                        <div className="modal">
+                            <h2>Confirm Upload</h2>
+                            <p>Are you sure you want to upload the data to Firestore?</p>
+                            <button 
+                                className="confirm-button"
+                                onClick={import_into_firebase} 
+                                disabled={isLoading}
+                            >
+                                {isLoading ? 'Uploading...' : 'Confirm'}
+                            </button>
+                        </div>
+                    </>
                 )}
 
                 {data.length > 0 && (
